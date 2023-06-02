@@ -5,5 +5,7 @@ const data = {
   wednesday: [],
   thursday: [],
   friday: [],
-  saturday: []
+  saturday: [],
+  editing: null,
+  view: 'monday'
 };
