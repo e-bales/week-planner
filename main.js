@@ -63,10 +63,15 @@ function renderTable(day, array) {
     $tr.setAttribute('data-id', eventObj.entryId);
     const $timeTD = document.createElement('td');
     const $notesTD = document.createElement('td');
+    const $buttonTD = document.createElement('td');
+    const $updateButton = document.createElement('button');
     $timeTD.textContent = eventObj.entryTime + ':00';
     $notesTD.textContent = eventObj.entryActivity;
+    $updateButton.textContent = 'Update';
     $tr.appendChild($timeTD);
     $tr.appendChild($notesTD);
+    $tr.appendChild($buttonTD);
+    $buttonTD.appendChild($updateButton);
     $tbody.appendChild($tr);
   }
   if (day !== 'monday') {
@@ -97,3 +102,20 @@ function sortArray(array) {
   });
   return array;
 }
+
+$table.addEventListener('click', event => {
+  if (event.target.tagName === 'BUTTON') {
+    $modalOverlay.classList.remove('hidden');
+    const targetTr = event.target.closest('tr').getAttribute('data-id');
+    const currentArray = data[data.view];
+    for (let i = 0; i < currentArray.length; i++) {
+      if (currentArray[i].entryId === Number(targetTr)) {
+        data.editing = currentArray[i];
+      }
+    }
+
+    $entryForm.elements[0].value = data.editing.entryDay;
+    $entryForm.elements[1].value = data.editing.entryTime;
+    $entryForm.elements[2].value = data.editing.entryActivity;
+  }
+});
