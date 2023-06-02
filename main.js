@@ -66,3 +66,11 @@ function renderTable(day, array) {
 
   return $tbody;
 }
+
+const $buttonRow = document.querySelector('#buttonRow');
+$buttonRow.addEventListener('click', function (event) {
+  const eventTargetAttribute = event.target.getAttribute('data-view');
+  event.target.classList.remove('hidden');
+  const currentView = document.querySelector('[data-view=' + CSS.escape(eventTargetAttribute) + ']');
+  console.log(eventTargetAttribute);
+});
