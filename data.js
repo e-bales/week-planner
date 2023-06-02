@@ -5,6 +5,7 @@ window.addEventListener('beforeunload', event => {
 });
 
 var data = {
+  nextEntryId: 1,
   sunday: [],
   monday: [],
   tuesday: [],

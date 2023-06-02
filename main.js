@@ -16,10 +16,12 @@ $entryForm.addEventListener('submit', event => {
   const time = $entryForm.elements[1].value;
   const activity = $entryForm.elements[2].value;
   const obj = {
+    entryId: data.nextEntryId,
     entryDay: day,
     entryTime: time,
     entryActivity: activity
   };
+  data.nextEntryId++;
   data[day].push(obj);
   deleteTbody(day);
   const $newTable = renderTable(day, data[day]);
@@ -58,9 +60,10 @@ function renderTable(day, array) {
   for (let i = 0; i < array.length; i++) {
     const eventObj = array[i];
     const $tr = document.createElement('tr');
+    $tr.setAttribute('data-id', eventObj.entryId);
     const $timeTD = document.createElement('td');
     const $notesTD = document.createElement('td');
-    $timeTD.textContent = eventObj.entryTime;
+    $timeTD.textContent = eventObj.entryTime + ':00';
     $notesTD.textContent = eventObj.entryActivity;
     $tr.appendChild($timeTD);
     $tr.appendChild($notesTD);
@@ -90,6 +93,7 @@ $buttonRow.addEventListener('click', function (event) {
 
 function sortArray(array) {
   array.sort((obj1, obj2) => {
-    return Number(obj1.time) - Number(obj2.time);
+    return Number(obj1.entryTime) - Number(obj2.entryTime);
   });
+  return array;
 }
