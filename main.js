@@ -1,11 +1,8 @@
 const $addEntryButton = document.querySelector('#add-entry');
 const $modalOverlay = document.querySelector('#modal-overlay');
 
-// Form elements
 const $entryForm = document.querySelector('#entry-form');
-// const newTitle = $form.elements[0].value;
-// const newUrl = $form.elements[1].value;
-// const newNotes = $form.elements[2].value;
+
 const $table = document.querySelector('table');
 
 $addEntryButton.addEventListener('click', event => {
@@ -68,9 +65,16 @@ function renderTable(day, array) {
 }
 
 const $buttonRow = document.querySelector('#buttonRow');
+
 $buttonRow.addEventListener('click', function (event) {
-  const eventTargetAttribute = event.target.getAttribute('data-view');
-  event.target.classList.remove('hidden');
-  const currentView = document.querySelector('[data-view=' + CSS.escape(eventTargetAttribute) + ']');
-  console.log(eventTargetAttribute);
+  if (event.target.tagName === 'BUTTON') {
+    const eventTargetAttribute = event.target.getAttribute('data-view');
+    const targetView = document.querySelector('#' + CSS.escape(eventTargetAttribute));
+    const currentView = document.querySelector('#' + CSS.escape(data.view));
+    const tableTitle = document.querySelector('#table-title');
+    currentView.classList.add('hidden');
+    targetView.classList.remove('hidden');
+    data.view = eventTargetAttribute;
+    tableTitle.textContent = 'Scheduled Events for ' + eventTargetAttribute[0].toUpperCase() + eventTargetAttribute.slice(1);
+  }
 });
