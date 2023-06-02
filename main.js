@@ -21,8 +21,16 @@ $entryForm.addEventListener('submit', event => {
     entryActivity: activity
   };
   data[day].push(obj);
+  deleteTbody(day);
+  const $newTable = renderTable(day, data[day]);
+  $table.appendChild($newTable);
   $entryForm.reset();
 });
+
+function deleteTbody(day) {
+  const $body = document.querySelector('#' + CSS.escape(day));
+  $body.remove();
+}
 
 document.addEventListener('DOMContentLoaded', event => {
   const $mondayTable = renderTable('monday', data.monday);
@@ -46,6 +54,7 @@ document.addEventListener('DOMContentLoaded', event => {
 function renderTable(day, array) {
   const $tbody = document.createElement('tbody');
   $tbody.setAttribute('id', day);
+  sortArray(array);
   for (let i = 0; i < array.length; i++) {
     const eventObj = array[i];
     const $tr = document.createElement('tr');
@@ -78,3 +87,9 @@ $buttonRow.addEventListener('click', function (event) {
     tableTitle.textContent = 'Scheduled Events for ' + eventTargetAttribute[0].toUpperCase() + eventTargetAttribute.slice(1);
   }
 });
+
+function sortArray(array) {
+  array.sort((obj1, obj2) => {
+    return Number(obj1.time) - Number(obj2.time);
+  });
+}

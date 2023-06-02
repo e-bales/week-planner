@@ -1,4 +1,5 @@
 window.addEventListener('beforeunload', event => {
+  data.view = 'monday';
   const dataModel = JSON.stringify(data);
   localStorage.setItem('userData', dataModel);
 });
