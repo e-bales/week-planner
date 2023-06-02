@@ -5,6 +5,8 @@ const $entryForm = document.querySelector('#entry-form');
 
 const $table = document.querySelector('table');
 
+const $modalTop = document.querySelector('#modal-top');
+
 $addEntryButton.addEventListener('click', event => {
   $modalOverlay.classList.remove('hidden');
 });
@@ -12,21 +14,34 @@ $addEntryButton.addEventListener('click', event => {
 $entryForm.addEventListener('submit', event => {
   event.preventDefault();
   $modalOverlay.classList.add('hidden');
-  const day = $entryForm.elements[0].value;
-  const time = $entryForm.elements[1].value;
-  const activity = $entryForm.elements[2].value;
-  const obj = {
-    entryId: data.nextEntryId,
-    entryDay: day,
-    entryTime: time,
-    entryActivity: activity
-  };
-  data.nextEntryId++;
-  data[day].push(obj);
-  deleteTbody(day);
-  const $newTable = renderTable(day, data[day]);
-  $table.appendChild($newTable);
-  $entryForm.reset();
+  if (data.editing !== null) {
+    data.editing.entryDay = $entryForm.elements[0].value;
+    data.editing.entryTime = $entryForm.elements[1].value;
+    data.editing.entryActivity = $entryForm.elements[2].value;
+    $modalTop.textContent = 'Add Entry';
+    deleteTbody(data.editing.entryDay);
+    const $newTable = renderTable(data.editing.entryDay, data[data.editing.entryDay]);
+    $table.appendChild($newTable);
+    $entryForm.reset();
+    data.editing = null;
+
+  } else {
+    const day = $entryForm.elements[0].value;
+    const time = $entryForm.elements[1].value;
+    const activity = $entryForm.elements[2].value;
+    const obj = {
+      entryId: data.nextEntryId,
+      entryDay: day,
+      entryTime: time,
+      entryActivity: activity
+    };
+    data.nextEntryId++;
+    data[day].push(obj);
+    deleteTbody(day);
+    const $newTable = renderTable(day, data[day]);
+    $table.appendChild($newTable);
+    $entryForm.reset();
+  }
 });
 
 function deleteTbody(day) {
@@ -65,12 +80,19 @@ function renderTable(day, array) {
     const $notesTD = document.createElement('td');
     const $buttonTD = document.createElement('td');
     const $updateButton = document.createElement('button');
+    const $deleteTD = document.createElement('td');
+    const $deleteButton = document.createElement('button');
     $timeTD.textContent = eventObj.entryTime + ':00';
     $notesTD.textContent = eventObj.entryActivity;
     $updateButton.textContent = 'Update';
+    $updateButton.classList.add('edit');
+    $deleteButton.textContent = 'Delete';
+    $deleteButton.classList.add('delete');
     $tr.appendChild($timeTD);
     $tr.appendChild($notesTD);
     $tr.appendChild($buttonTD);
+    $tr.appendChild($deleteTD);
+    $deleteTD.appendChild($deleteButton);
     $buttonTD.appendChild($updateButton);
     $tbody.appendChild($tr);
   }
@@ -105,17 +127,31 @@ function sortArray(array) {
 
 $table.addEventListener('click', event => {
   if (event.target.tagName === 'BUTTON') {
-    $modalOverlay.classList.remove('hidden');
-    const targetTr = event.target.closest('tr').getAttribute('data-id');
-    const currentArray = data[data.view];
-    for (let i = 0; i < currentArray.length; i++) {
-      if (currentArray[i].entryId === Number(targetTr)) {
-        data.editing = currentArray[i];
+    if (event.target.classList[0] === 'edit') {
+      $modalTop.textContent = 'Edit Entry';
+      $modalOverlay.classList.remove('hidden');
+      const targetTr = event.target.closest('tr').getAttribute('data-id');
+      const currentArray = data[data.view];
+      for (let i = 0; i < currentArray.length; i++) {
+        if (currentArray[i].entryId === Number(targetTr)) {
+          data.editing = currentArray[i];
+        }
       }
+
+      $entryForm.elements[0].value = data.editing.entryDay;
+      $entryForm.elements[1].value = data.editing.entryTime;
+      $entryForm.elements[2].value = data.editing.entryActivity;
+    } else if (event.target.classList[0] === 'delete') {
+      const targetTr = event.target.closest('tr').getAttribute('data-id');
+      const currentArray = data[data.view];
+      for (let i = 0; i < currentArray.length; i++) {
+        if (currentArray[i].entryId === Number(targetTr)) {
+          currentArray.splice(i, 1);
+        }
+      }
+      event.target.closest('tr').classList.add('hidden');
+      event.target.closest('tr').remove();
     }
 
-    $entryForm.elements[0].value = data.editing.entryDay;
-    $entryForm.elements[1].value = data.editing.entryTime;
-    $entryForm.elements[2].value = data.editing.entryActivity;
   }
 });
