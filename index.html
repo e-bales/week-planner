@@ -35,7 +35,7 @@
         <div class="row">
           <div class="col-full">
             <div class="dropdowns">
-              <select name="day" id="select-day">
+              <select name="day" id="select-day" required>
                 <option value="Sunday">Sunday</option>
                 <option value="Monday">Monday</option>
                 <option value="Tuesday">Tuesday</option>
@@ -44,7 +44,7 @@
                 <option value="Friday">Friday</option>
                 <option value="Saturday">Saturday</option>
               </select>
-              <select name="time" id="select-time">
+              <select name="time" id="select-time" required>
                 <option value="1">1:00</option>
                 <option value="2">2:00</option>
                 <option value="3">3:00</option>
@@ -74,7 +74,7 @@
         </div>
         <div class="row">
           <div class="col-full">
-            <textarea class="notes" rows="4">Description</textarea>
+            <textarea class="notes" rows="4" required>Description</textarea>
           </div>
         </div>
         <div class="row">
@@ -87,6 +87,7 @@
       </form>
     </div>
   </div>
+  <script src="data.js"></script>
   <script src="main.js"></script>
 </body>
 
